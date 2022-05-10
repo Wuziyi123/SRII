@@ -1,2 +1,65 @@
-# SRII
+# PyTorch Implementation of  SRII
+***
+A PyTorch Implementation of [SRII: An Incremental Learning Apporoach for Sustainable Region Isolation and Integration](https://*******).
+
+
+## Abstract
+***
 Class Incremental Learning
+
+## Installation
+***
+### Prerequisites
+* python == 3.6
+* pytorch == 1.8.1
+* torch == 1.7.0
+* torchvision >= 0.8
+* numpy == 1.19.5
+* matplotlib == 3.3.4
+* opencv-python == 4.5.1.48
+
+### Setup
+ * Install anaconda: https://www.anaconda.com/distribution/
+ * set up conda environmet w/ python 3.8, ex: `conda create --name <env_name> python=3.8.5`
+ * `conda activate <env_name>`
+ * `conda env create -f environment.yml -p <anaconda>/envs/<env_name>`
+
+### Datasets
+
+Download/Extract the following datasets to the dataset folder under the project root directory.
+* For CIFAR-100 and miniImageNet, download the python version dataset [CIFAR100](https://www.cs.toronto.edu/~kriz/cifar.html) miniImageNet
+
+
+## Training
+***
+All commands should be run under the project root directory.
+```shell
+sh ./main.sh
+```
+
+# Result
+***
+Results are generated for various task sizes. See the main text for full details. Numbers represent final accuracy in three runs (higher the better).
+
+### CIFAR-100 (with 2000 image coreset)
+tasks | 10 | 20 | 30 | 40 | 50 | 60 | 70 | 80 | 90 | 100 
+--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+A-GEM | 85.0 | 58.42 | 48.3 | 44.39 | 43.7 | 41.4 | 40.48 | 37.26 | 31.74 | 26.91 | 45.76  
+EMR | 82 | 61.5 | 54.67 | 50.74 | 47.83 | 44.42 | 42.71 | 36.73 | 34.17 | 31.78 | 48.66 
+iCaRL | 84.9 | 73.7 | 69.17 | 64.75 | 61.94 | 60.17 | 58.3 | 54.99 | 53.6 | 50.83 | 63.24  
+LUCIR | 89.1 | 72.2 | 63.43 | 56.17 | 53 | 49.87 | 49.3 | 46.31 | 43.81 | 42.09 | 56.53 
+LwF | 85.8 | 58.8 | 53.62 | 48.52 | 42.02 | 38.24 | 35.86 | 33.16 | 29.43 | 25.74 | 45.12 
+EWC | 86.1 | 66.1 | 60.57 | 53.75 | 47.42 | 43.88 | 41.07 | 39.24 | 35.83 | 31.33 | 50.53 
+ABD | **91.5** | 74.2 | 70.2 | 57.8 | 52.98 | 46 | 43.36 | 38.59 | 36.52 | 33.2 | 54.44 
+SCR | 86 | 76.7 | 74.1 | 68.7 | 65.5 | 63.9 | 60.03 | 58.9 | 54.91 | 51.08 | 65.98 
+S&B | 87.2 | 81.47 | 77.52 | 73.64 | 69.15 | 64.66 | 61.55 | 59.05 | 55.31 | 52.29 | 68.18 
+Upper Bound | 87.3 | 84.72 | 82.43 | 81.59 | 79.74 | 78.64 | 78.42 | 77.11 | 76.85 | 76.32 | **80.30** 
+Ours (SRII) | **90.5** | **85.5** | **82.52** | **80** | **76.08** | **72.11** | **68.74** | **64.14** | **61.97** | **60.25** | **74.18** 
+
+
+## Acknowledgements
+***
+Special thanks to https://github.com/DRSAD/iCaRL for his iCaRL Networks
+ implementation of which parts were used for this implementation. More
+  details of iCaRL at https://arxiv.org/abs/1611.07725
+
