@@ -1,6 +1,6 @@
 >📋  A template README.md for code accompanying a Machine Learning paper
 
-# My Paper Title
+# An Incremental Learning Apporoach for Sustainable Regional Isolation and Integration
 
 This repository is the official implementation of [SRII: An Incremental Learning Apporoach for Sustainable Regional Isolation and Integration](https://*******). 
 
@@ -98,7 +98,7 @@ Ours (SRII) | **92.3** | **87.69** | **84.18** | **81.57** | **77.57** | **73.84
 ### [miniImageNet 5-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/image-classification-on-imagenet)
 
 tasks | 5 | 20 | 40 | 60 | 80 | 100 | Avg |
---- | --- | --- | --- | --- | --- | --- | --- |
+:---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 S&B | 89.26 | 83.77 | 79.8 | 75.12 | 70.46 | 66.93 | 63.08 
 LwF | 88.1 | 81.2 | 72.2 | 63.57 | 55.3 | 49.85 | 44.86 
 Bic | 90.8 | 80.18 | 75.53 | 71.23 | 67.65 | 62.58 | 58.19   
