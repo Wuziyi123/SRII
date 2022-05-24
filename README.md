@@ -70,7 +70,7 @@ Our model achieves the following performance on :
 ### [CIFAR-100 10-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/image-classification-on-imagenet)
 
 tasks | 10 | 20 | 30 | 40 | 50 | 60 | 70 | 80 | 90 | 100 | Avg |
---- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 A-GEM | 85.0 | 58.42 | 48.3 | 44.39 | 43.7 | 41.4 | 40.48 | 37.26 | 31.74 | 26.91 | 45.76  
 EMR | 82 | 61.5 | 54.67 | 50.74 | 47.83 | 44.42 | 42.71 | 36.73 | 34.17 | 31.78 | 48.66 
 iCaRL | 84.9 | 73.7 | 69.17 | 64.75 | 61.94 | 60.17 | 58.3 | 54.99 | 53.6 | 50.83 | 63.24  
@@ -97,7 +97,7 @@ Ours (SRII) | **92.3** | **87.69** | **84.18** | **81.57** | **77.57** | **73.84
 
 ### [miniImageNet 5-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/image-classification-on-imagenet)
 
-tasks | 5 | 20 | 40 | 60 | 80 | 100 | Avg|
+tasks | 5 | 20 | 40 | 60 | 80 | 100 | Avg |
 --- | --- | --- | --- | --- | --- | --- | --- |
 S&B | 89.26 | 83.77 | 79.8 | 75.12 | 70.46 | 66.93 | 63.08 
 LwF | 88.1 | 81.2 | 72.2 | 63.57 | 55.3 | 49.85 | 44.86 
@@ -107,9 +107,6 @@ ABD | 93.3 | 78.39 | 73.86 | 66.54 | 58.94 | 53.24 | 48.01
 Upper Bound | 89.5 | 86.71 | 84.13 | 83.25 | 81.56 | 82.14 | 80.57  
 Ours (SRII) | **92.3** | **87.69** | **84.18** | **81.57** | **77.57** | **73.84** | **71.04** 
 
-| Model name         | Top 1 Accuracy  | Top 5 Accuracy |
-| ------------------ |---------------- | -------------- |
-| My awesome model   |     85%         |      95%       |
 
 >📋  Include a table of results from your paper, and link back to the leaderboard for clarity and context. If your main result is a figure, include that figure and link to the command or notebook to reproduce it. 
 
