@@ -2,7 +2,7 @@
 
 # My Paper Title
 
-This repository is the official implementation of [SRII: An Incremental Learning Apporoach for Sustainable Region Isolation and Integration](https://*******). 
+This repository is the official implementation of [SRII: An Incremental Learning Apporoach for Sustainable Regional Isolation and Integration](https://*******). 
 
 
 ## Installation
