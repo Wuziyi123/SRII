@@ -83,7 +83,7 @@ S&B | 87.2 | 81.47 | 77.52 | 73.64 | 69.15 | 64.66 | 61.55 | 59.05 | 55.31 | 52.
 Upper Bound | 87.3 | 84.72 | 82.43 | 81.59 | 79.74 | 78.64 | 78.42 | 77.11 | 76.85 | 76.32 | **80.30** 
 Ours (SRII) | **90.5** | **85.5** | **82.52** | **80** | **76.08** | **72.11** | **68.74** | **64.14** | **61.97** | **60.25** | **74.18**
 
-[miniImageNet 10-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/image-classification-on-imagenet)
+### [miniImageNet 10-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/image-classification-on-imagenet)
 
 tasks | 10 | 20 | 30 | 40 | 50 | 60 | 70 | 80 | 90 | 100 
 --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
