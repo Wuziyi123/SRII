@@ -33,11 +33,13 @@ conda env create -f environment.yml -p <anaconda>/envs/<env_name>
 >📋  Describe how to set up the environment, e.g. pip/conda/docker commands, download datasets, etc...
 
 ## Training
+***
+All commands should be run under the project root directory.
 
 To train the model(s) in the paper, run this command:
 
 ```train
-python train.py --input-data <path_to_data> --alpha 10 --beta 20
+sh ./main.sh
 ```
 
 >📋  Describe how to train the models, with example commands on how to train the models in your paper, including the full training procedure and appropriate hyperparameters.
