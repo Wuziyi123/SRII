@@ -10,13 +10,13 @@ This repository is the official implementation of [SRII: An Incremental Learning
 To install requirements:
 
 ```requirements
-* python == 3.6
-* pytorch == 1.8.1
-* torch == 1.7.0
-* torchvision >= 0.8
-* numpy == 1.19.5
-* matplotlib == 3.3.4
-* opencv-python == 4.5.1.48
+python == 3.6
+pytorch == 1.8.1
+torch == 1.7.0
+torchvision >= 0.8
+numpy == 1.19.5
+matplotlib == 3.3.4
+opencv-python == 4.5.1.48
 ```
 
 ### Setup
