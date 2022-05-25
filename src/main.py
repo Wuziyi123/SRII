@@ -32,6 +32,7 @@ def main(parser_data):
     branch_model.model.fc = None
 
     # 如果指定了上次训练保存的权重文件地址，则接着上次结果接着训练
+    print(parser_data.pre_trained)
     if parser_data.pre_trained != "":
         if os.path.isfile(parser_data.pre_trained):
             print("=> loading checkpoint '{}'".format(parser_data.pre_trained))
@@ -80,7 +81,7 @@ if __name__ == "__main__":
     parser.add_argument('--output-dir', default='./save_weights', help='path where to save')
     # 若需要接着上次训练，则指定上次训练保存权重文件地址
     # ./save_weights/resNetFpn-model-4.pth
-    parser.add_argument('--pre_trained', default='', type=str, help='resume from checkpoint')
+    parser.add_argument('--pre_trained', default='pretrained/cifar100-pretrained.pth.tar', type=str, help='pre-trained model', metavar='PRE-TRAINED MODEL')
     # 训练的batch size
     parser.add_argument('--batch_size', default=128, type=int, metavar='N',
                         help='batch size when training.')
