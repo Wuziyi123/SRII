@@ -21,12 +21,14 @@ def main(parser_data):
     epochs = 100
     batch_size = parser_data.batch_size
     learning_rate = parser_data.learning_rate
+    data_path = parser_data.input_data
+
 
     os.chdir(r'../')
 
-    model = iCaRLmodel(numclass, feature_extractor, batch_size, task_size, memory_size, epochs, learning_rate)
-    # model = miniImagemodel(numclass, feature_extractor, batch_size, task_size, memory_size, epochs, learning_rate)
-    branch_model = iCaRLmodel(numclass,branch_feature_extractor,batch_size,task_size,memory_size,epochs,learning_rate)
+    model = iCaRLmodel(data_path, numclass, feature_extractor, batch_size, task_size, memory_size, epochs, learning_rate)
+    # model = miniImagemodel(data_path, numclass, feature_extractor, batch_size, task_size, memory_size, epochs, learning_rate)
+    branch_model = iCaRLmodel(data_path, numclass,branch_feature_extractor,batch_size,task_size,memory_size,epochs,learning_rate)
 
     accuracy = 0
     branch_model.model.fc = None
@@ -76,7 +78,7 @@ if __name__ == "__main__":
     # learning rate
     parser.add_argument('--learning_rate', default=2.0, type=float, help='learning rate')
     # 训练数据集的根目录
-    parser.add_argument('--data-path', default='./', help='dataset')
+    parser.add_argument('--input_data', default='dataset', type=str, help='path of dataset', metavar='PATH_TO_DATA')
     # 文件保存地址
     parser.add_argument('--output-dir', default='./save_weights', help='path where to save')
     # 若需要接着上次训练，则指定上次训练保存权重文件地址

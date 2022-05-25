@@ -53,7 +53,7 @@ def get_one_hot(target, num_class):
 
 class iCaRLmodel:
 
-    def __init__(self, numclass, feature_extractor, batch_size, task_size, memory_size, epochs, learning_rate):
+    def __init__(self, data_path, numclass, feature_extractor, batch_size, task_size, memory_size, epochs, learning_rate):
 
         super(iCaRLmodel, self).__init__()
         self.epochs = epochs
@@ -83,7 +83,9 @@ class iCaRLmodel:
                                                       transforms.ToTensor(),
                                                       transforms.Normalize((0.5071, 0.4867, 0.4408),
                                                                            (0.2675, 0.2565, 0.2761))])
-        file_path = os.path.join(os.path.dirname(__file__), '../dataset')
+
+        file_path = os.path.join(os.getcwd(), data_path)
+        # file_path = os.path.join(os.path.dirname(__file__), 'dataset')
         self.train_dataset = iCIFAR100(file_path, transform=self.train_transform, download=True)
         self.test_dataset = iCIFAR100(file_path, test_transform=self.test_transform, train=False, download=True)
 
@@ -183,18 +185,11 @@ class iCaRLmodel:
         accuracy = 0
         best_map = 0.0
 
+        # centerloss = None
+        # opt_center = None
         # if branch:
-        #     self.epochs = 100
-        # else:
-        #     self.epochs = 1
-
-        # weight_decay = 0.00001
-
-        centerloss = None
-        opt_center = None
-        if branch:
-            centerloss = CenterLoss(up_model.numclass, 512).to(device)
-            opt_center = optim.SGD(centerloss.parameters(), lr=0.5)
+        #     centerloss = CenterLoss(up_model.numclass, 512).to(device)
+        #     opt_center = optim.SGD(centerloss.parameters(), lr=0.5)
 
         opt_down = optim.SGD(self.model.parameters(), lr=self.learning_rate, weight_decay=0)
 
@@ -208,7 +203,7 @@ class iCaRLmodel:
             for param in self.model.feature.parameters():
                 param.requires_grad = False
             pg = [p for p in self.model.parameters() if p.requires_grad]
-            opt = optim.SGD(pg, lr=self.learning_rate, weight_decay=0.00001)
+            opt = optim.SGD(pg, lr=self.learning_rate, weight_decay=0.00001, momentum=0.9, nesterov=True)
             classes = [self.numclass - self.task_size, self.numclass]
             self.train_loader = self._get_train_refine_dataloader(classes)
         elif iter == 0 and incremental:
@@ -221,27 +216,35 @@ class iCaRLmodel:
 
         for epoch in range(self.epochs):
             # if not branch:
-            if epoch > 40 and epoch < 48:
-                for p in opt.param_groups:
-                    p['lr'] = self.learning_rate / (1.0 + 0.21 * (epoch - 40))
-            if epoch == 48:
-                if not incremental:
-                    opt = optim.SGD(self.model.parameters(), lr=self.learning_rate / 5)
-                else:
-                    for p in opt.param_groups:
-                        p['lr'] = self.learning_rate / 2.5
-            elif epoch == 62:
-                if not incremental:
-                    opt = optim.SGD(self.model.parameters(), lr=self.learning_rate / 25)
-                else:
-                    for p in opt.param_groups:
-                        p['lr'] = self.learning_rate / 12.5
-            elif epoch == 80:
-                if not incremental:
-                    opt = optim.SGD(self.model.parameters(), lr=self.learning_rate / 125)
-                else:
+            if iter == 2 and incremental:
+                if epoch == 0:
                     for p in opt.param_groups:
                         p['lr'] = self.learning_rate / 62.5
+                if epoch == 60:
+                    for p in opt.param_groups:
+                        p['lr'] = self.learning_rate / 125
+            else:
+                if epoch > 40 and epoch < 48:
+                    for p in opt.param_groups:
+                        p['lr'] = self.learning_rate / (1.0 + 0.21 * (epoch - 40))
+                if epoch == 48:
+                    if not incremental:
+                        opt = optim.SGD(self.model.parameters(), lr=self.learning_rate / 5)
+                    else:
+                        for p in opt.param_groups:
+                            p['lr'] = self.learning_rate / 2.5
+                elif epoch == 62:
+                    if not incremental:
+                        opt = optim.SGD(self.model.parameters(), lr=self.learning_rate / 25)
+                    else:
+                        for p in opt.param_groups:
+                            p['lr'] = self.learning_rate / 12.5
+                elif epoch == 80:
+                    if not incremental:
+                        opt = optim.SGD(self.model.parameters(), lr=self.learning_rate / 125)
+                    else:
+                        for p in opt.param_groups:
+                            p['lr'] = self.learning_rate / 62.5
             # else:
             #     if epoch == 48:
             #         for p in opt.param_groups:
@@ -349,10 +352,10 @@ class iCaRLmodel:
                             outputs = self.model(images)
                             num_old_classes = self.numclass - 10
                             T = 2
-                            alpha = 0.24  # 0.25
+                            alpha = 0.25  # 0.25
                             ref_outputs = self.old_model(images)
-                            loss1 = nn.KLDivLoss()(F.log_softmax(outputs[:, :num_old_classes] / T, dim=1),
-                            F.softmax(ref_outputs.detach() / T, dim=1)) * T * T * alpha * num_old_classes
+                            loss1 = nn.KLDivLoss(reduction="batchmean")(F.log_softmax(outputs[:, :num_old_classes] / T, dim=1),
+                            F.softmax(ref_outputs.detach() / T, dim=1)) * T * T * alpha
 
                             new = outputs[old_index, new_num:]
                             old = outputs[old_index, :new_num]
@@ -415,6 +418,13 @@ class iCaRLmodel:
 
                     if epoch == 99 and step == end and incremental and iter == 0:
 
+                        if os.path.isfile("best.pth.tar"):
+                            print("=> loading checkpoint '{}'".format("best.pth.tar"))
+                            checkpoint = torch.load("best.pth.tar")
+                            self.model.load_state_dict(checkpoint['state_dict'], strict=False)
+                        else:
+                            print("=> no checkpoint found at '{}'".format("best.pth.tar"))
+
                         print("store temp weights!")
                         filename = "temp-base.pth.tar"
                         torch.save({
@@ -475,8 +485,8 @@ class iCaRLmodel:
                     # else:
                     #     a = 0
                     # a = 1
-                    a = max(0.3 - epoch / 267, 0)
-                    # a = -1
+                    # a = max(0.3 - epoch / 267, 0)
+                    a = max(0.1 - epoch / 800, 0)
 
                     # a = max(0.5 - epoch / 0.8 * 2
                     # T, 0)  # Baseline
@@ -497,10 +507,10 @@ class iCaRLmodel:
                         # feat, outputs = up_model.model(up_images, fusion_material_from_downBranch, a)
                         num_old_classes = up_model.numclass - 10
                         T = 2
-                        alpha = 0.24  # 0.25
+                        alpha = 0.25  # 0.25
                         ref_outputs = up_model.old_model(up_images)
-                        loss1 = nn.KLDivLoss()(F.log_softmax(outputs[:, :num_old_classes] / T, dim=1),
-                        F.softmax(ref_outputs.detach() / T, dim=1)) * T * T * alpha * num_old_classes
+                        loss1 = nn.KLDivLoss(reduction="batchmean")(F.log_softmax(outputs[:, :num_old_classes] / T, dim=1),
+                        F.softmax(ref_outputs.detach() / T, dim=1)) * T * T * alpha
 
                         new = outputs[old_index, new_num:]
                         old = outputs[old_index, :new_num]
@@ -519,17 +529,18 @@ class iCaRLmodel:
                             margin_loss = torch.tensor(0)
 
                         loss2 = nn.CrossEntropyLoss()(outputs, up_targets)
-                        center_loss = centerloss(feat, up_targets)
+                        # center_loss = centerloss(feat, up_targets)
                         # 0.3-84.5 0.32-
-                        loss_up = loss1 + loss2 + 0.36 * margin_loss + 0.29 * center_loss - 0.13  # 0.29-0.13
+                        # print(loss1,loss2)
+                        loss_up = loss1 + loss2 + 0.36 * margin_loss  # 0.29-0.13
 
                     opt.zero_grad()
-                    opt_center.zero_grad()
+                    # opt_center.zero_grad()
                     scaler.scale(loss_up).backward()  # backward
                     up_model.updateBN(model)
 
                     scaler.step(opt)  # optimize
-                    scaler.step(opt_center)
+                    # scaler.step(opt_center)
                     scaler.update()
 
                     up_model.model.up_branch = False
@@ -557,8 +568,8 @@ class iCaRLmodel:
                             'bias': up_model.bias,
                             'down_branch': self.model.state_dict()
                         }, filename)  # split-incremental-2.pth.tar
-                        if incremental == 2:
-                            exit(-1)
+                        # if incremental == 2:
+                        #     exit(-1)
 
                     if step and step % 27 == 0:
                         print('epoch:%d,step:%d,loss:%.3f' % (epoch, step, loss_up.item()))
@@ -681,6 +692,7 @@ class iCaRLmodel:
         self.compute_exemplar_class_mean()
         self.model.train()
         if branch:
+            exit(-1)
             KNN_accuracy = self._test(self.test_loader, 1, branch=branch, down_model=down_model)
         else:
             KNN_accuracy = self._test(self.test_loader, 1)

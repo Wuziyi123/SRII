@@ -59,7 +59,7 @@ sh ./main.sh --pre_trained pretrained/cifar100-pretrained.pth.tar
 To evaluate my model, run:
 
 ```eval
-sh ./test.sh --model-file mymodel.pth --benchmark imagenet
+sh ./test.sh --model-file <mymodel.pth>
 ```
 
 
