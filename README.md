@@ -4,9 +4,12 @@
 
 This repository is the official implementation of [SRII: An Incremental Learning Apporoach for Sustainable Regional Isolation and Integration](https://*******). 
 
+# Pre-trained
+***
 
 ## Installation
-***
+
+### Requirements
 To install requirements:
 
 ```requirements
@@ -30,6 +33,12 @@ conda activate <env_name>
 conda env create -f environment.yml -p <anaconda>/envs/<env_name>
 ```
 
+## DataSet
+We conduct experiments on commonly used incremental learning bencnmarks: CIFAR100, miniImageNet.
+  1. CIFAR100 is available at [cs.toronto.edu] (https://www.cs.toronto.edu/~kriz/cifar.html)
+  2. miniImageNet is available at [Our Google Drive] (https://drive.google.com/file/d/15WB2Q5vawJxai9vHrw5FGbPBKAeTTfBY) 
+
+
 >📋  Describe how to set up the environment, e.g. pip/conda/docker commands, download datasets, etc...
 
 
@@ -42,7 +51,7 @@ You can download pretrained models here:
 >📋  Give a link to where/how the pretrained models can be downloaded and how they were trained (if applicable).  Alternatively you can have an additional column in your results table with a link to the models.
 
 
-## Training
+# Training
 ***
 All commands should be run under the project root directory.
 
@@ -54,7 +63,7 @@ sh ./main.sh --input_data dataset --pre_trained pretrained/cifar100-pretrained.p
 
 >📋  Describe how to train the models, with example commands on how to train the models in your paper, including the full training procedure and appropriate hyperparameters.
 
-## Evaluation
+# Evaluation
 ***
 To evaluate my model, run:
 
@@ -66,12 +75,12 @@ sh ./test.sh --model-file <mymodel.pth>
 >📋  Describe how to evaluate the trained models on benchmarks reported in the paper, give commands that produce the results (section below).
 
 
-## Results
+# Results
 ***
 Results are generated for various task sizes. See the main text for full details.
 Our model achieves the following performance on :
 
-### [CIFAR-100 10-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/image-classification-on-imagenet)
+## [CIFAR-100 10-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/image-classification-on-imagenet)
 
 tasks | 10 | 20 | 30 | 40 | 50 | 60 | 70 | 80 | 90 | 100 | Avg |
 :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -87,7 +96,7 @@ S&B | 87.2 | 81.47 | 77.52 | 73.64 | 69.15 | 64.66 | 61.55 | 59.05 | 55.31 | 52.
 Upper Bound | 87.3 | 84.72 | 82.43 | 81.59 | 79.74 | 78.64 | 78.42 | 77.11 | 76.85 | 76.32 | **80.30** 
 Ours (SRII) | **90.5** | **85.5** | **82.52** | **80** | **76.08** | **72.11** | **68.74** | **64.14** | **61.97** | **60.25** | **74.18**
 
-### [miniImageNet 10-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/image-classification-on-imagenet)
+## [miniImageNet 10-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/image-classification-on-imagenet)
 
 tasks | 10 | 20 | 30 | 40 | 50 | 60 | 70 | 80 | 90 | 100 | Avg |
 :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -99,7 +108,7 @@ ABD | 93.3 | 78.39 | 73.86 | 66.54 | 58.94 | 53.24 | 48.01 | 43.73 | 39.93 | 38.
 Upper Bound | 89.5 | 86.71 | 84.13 | 83.25 | 81.56 | 82.14 | 80.57 | 79.11 | 78.88 | 78.32 | **82.42** 
 Ours (SRII) | **92.3** | **87.69** | **84.18** | **81.57** | **77.57** | **73.84** | **71.04** | **67.36** | **64.19** | **62.48** | **76.22**
 
-### [miniImageNet 5-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/image-classification-on-imagenet)
+## [miniImageNet 5-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/image-classification-on-imagenet)
 
 tasks | 5 | 20 | 40 | 60 | 80 | 100 | Avg |
 :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -115,13 +124,13 @@ Ours (SRII) | **92.3** | **87.69** | **84.18** | **81.57** | **77.57** | **73.84
 >📋  Include a table of results from your paper, and link back to the leaderboard for clarity and context. If your main result is a figure, include that figure and link to the command or notebook to reproduce it. 
 
 
-## Contributing
+# Contributing
 ***
 
 >📋  Pick a licence and describe how to contribute to your code repository.
 
 
-## Acknowledgements
+# Acknowledgements
 ***
 Special thanks to https://github.com/DRSAD/iCaRL for his iCaRL Networks
  implementation of which parts were used for this implementation. More
