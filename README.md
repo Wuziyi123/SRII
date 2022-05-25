@@ -4,8 +4,8 @@
 
 This repository is the official implementation of [SRII: An Incremental Learning Apporoach for Sustainable Regional Isolation and Integration](https://*******). 
 
-# Pre-trained
 ***
+# Pre-trained
 
 ## Installation
 
@@ -38,21 +38,21 @@ We conduct experiments on commonly used incremental learning bencnmarks: CIFAR10
   1. CIFAR100 is available at [cs.toronto.edu] (https://www.cs.toronto.edu/~kriz/cifar.html)
   2. miniImageNet is available at [Our Google Drive] (https://drive.google.com/file/d/15WB2Q5vawJxai9vHrw5FGbPBKAeTTfBY) 
 
-
 >📋  Describe how to set up the environment, e.g. pip/conda/docker commands, download datasets, etc...
 
-
 ## Pre-trained Models
-***
+
 You can download pretrained models here:
 
 - [My pre-trained model](https://drive.google.com/file/d/1iSd466hB69USclAyxuqK07LxzHFe8SCA/view?usp=sharing) trained on CIFAR100. 
 
 >📋  Give a link to where/how the pretrained models can be downloaded and how they were trained (if applicable).  Alternatively you can have an additional column in your results table with a link to the models.
 
+***
+
 
 # Training
-***
+
 All commands should be run under the project root directory.
 
 To train the model(s) in the paper, run this command:
@@ -63,8 +63,11 @@ sh ./main.sh --input_data dataset --pre_trained pretrained/cifar100-pretrained.p
 
 >📋  Describe how to train the models, with example commands on how to train the models in your paper, including the full training procedure and appropriate hyperparameters.
 
-# Evaluation
 ***
+
+
+# Evaluation
+
 To evaluate my model, run:
 
 ```eval
@@ -74,9 +77,11 @@ sh ./test.sh --model-file <mymodel.pth>
 
 >📋  Describe how to evaluate the trained models on benchmarks reported in the paper, give commands that produce the results (section below).
 
+***
+
 
 # Results
-***
+
 Results are generated for various task sizes. See the main text for full details.
 Our model achieves the following performance on :
 
@@ -120,18 +125,21 @@ ABD | 93.3 | 78.39 | 73.86 | 66.54 | 58.94 | 53.24 | 48.01
 Upper Bound | 89.5 | 86.71 | 84.13 | 83.25 | 81.56 | 82.14 | 80.57  
 Ours (SRII) | **92.3** | **87.69** | **84.18** | **81.57** | **77.57** | **73.84** | **71.04** 
 
-
 >📋  Include a table of results from your paper, and link back to the leaderboard for clarity and context. If your main result is a figure, include that figure and link to the command or notebook to reproduce it. 
+
+***
 
 
 # Contributing
-***
 
 >📋  Pick a licence and describe how to contribute to your code repository.
 
+***
+
 
 # Acknowledgements
-***
+
 Special thanks to https://github.com/DRSAD/iCaRL for his iCaRL Networks
  implementation of which parts were used for this implementation. More
   details of iCaRL at https://arxiv.org/abs/1611.07725
+***
