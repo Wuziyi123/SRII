@@ -130,16 +130,10 @@ Ours (SRII) | **92.3** | **87.69** | **84.18** | **81.57** | **77.57** | **73.84
 ***
 
 
-# Contributing
-
->📋  Pick a licence and describe how to contribute to your code repository.
-
-***
-
-
 # Acknowledgements
 
 Special thanks to https://github.com/DRSAD/iCaRL for his iCaRL Networks
  implementation of which parts were used for this implementation. More
   details of iCaRL at https://arxiv.org/abs/1611.07725
+
 ***
