@@ -32,6 +32,16 @@ conda env create -f environment.yml -p <anaconda>/envs/<env_name>
 
 >📋  Describe how to set up the environment, e.g. pip/conda/docker commands, download datasets, etc...
 
+
+## Pre-trained Models
+***
+You can download pretrained models here:
+
+- [My pre-trained model](https://drive.google.com/file/d/1iSd466hB69USclAyxuqK07LxzHFe8SCA/view?usp=sharing) trained on CIFAR100. 
+
+>📋  Give a link to where/how the pretrained models can be downloaded and how they were trained (if applicable).  Alternatively you can have an additional column in your results table with a link to the models.
+
+
 ## Training
 ***
 All commands should be run under the project root directory.
@@ -39,7 +49,7 @@ All commands should be run under the project root directory.
 To train the model(s) in the paper, run this command:
 
 ```train
-sh ./main.sh
+sh ./main.sh --pre_trained pretrained/cifar100-pretrained.pth.tar
 ```
 
 >📋  Describe how to train the models, with example commands on how to train the models in your paper, including the full training procedure and appropriate hyperparameters.
@@ -52,15 +62,9 @@ To evaluate my model, run:
 sh ./test.sh --model-file mymodel.pth --benchmark imagenet
 ```
 
+
 >📋  Describe how to evaluate the trained models on benchmarks reported in the paper, give commands that produce the results (section below).
 
-## Pre-trained Models
-***
-You can download pretrained models here:
-
-- [My awesome model](https://drive.google.com/mymodel.pth) trained on ImageNet. 
-
->📋  Give a link to where/how the pretrained models can be downloaded and how they were trained (if applicable).  Alternatively you can have an additional column in your results table with a link to the models.
 
 ## Results
 ***
