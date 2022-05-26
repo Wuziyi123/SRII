@@ -56,8 +56,7 @@ opencv-python == 4.5.1.48
 ### Setup
 
  * Install anaconda: https://www.anaconda.com/distribution/
- * set up conda environmet w/ python 3.8, ex: `conda create --name <env_name> python=3.8.5`
- * `conda activate <env_name>`
+ * set up conda environmet & python 3.6, ex: `conda create --name <env_name> python=3.6`
 
 ```setup
 conda activate <env_name>
