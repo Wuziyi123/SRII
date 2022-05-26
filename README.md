@@ -144,7 +144,7 @@ Upper Bound | 89.5 | 86.71 | 84.13 | 83.25 | 81.56 | 82.14 | 80.57 | 79.11 | 78.
 Ours (SRII) | **92.3** | **87.69** | **84.18** | **81.57** | **77.57** | **73.84** | **71.04** | **67.36** | **64.19** | **62.48** | **76.22**
 
 ## miniImageNet 5-Stage (with 2000 image coreset)
-<div align="center>
+<table align="center>
 tasks | 5 | 20 | 40 | 60 | 80 | 100 | Avg |
 :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 S&B | 89.26 | 83.77 | 79.8 | 75.12 | 70.46 | 66.93 | 63.08 
@@ -154,7 +154,7 @@ E2E | 90.45 | 79.68 | 72.53 | 67.93 | 62.65 | 58.58 | 54.49
 ABD | 93.3 | 78.39 | 73.86 | 66.54 | 58.94 | 53.24 | 48.01  
 Upper Bound | 89.5 | 86.71 | 84.13 | 83.25 | 81.56 | 82.14 | 80.57  
 Ours (SRII) | **92.3** | **87.69** | **84.18** | **81.57** | **77.57** | **73.84** | **71.04** 
-</div>
+</table>
 >📋  Include a table of results from your paper, and link back to the leaderboard for clarity and context. If your main result is a figure, include that figure and link to the command or notebook to reproduce it. 
 
 ***
