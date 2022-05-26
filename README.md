@@ -9,7 +9,7 @@
 
 # Paper
 
-- An Incremental Learning Apporoach for Sustainable Regional Isolation and Integration 
+- ***An Incremental Learning Apporoach for Sustainable Regional Isolation and Integration*** 
 
 This repository is the official implementation of [SRII: An Incremental Learning Apporoach for Sustainable Regional Isolation and Integration](https://*******). 
 
