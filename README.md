@@ -10,7 +10,9 @@ This repository is the official implementation of [SRII: An Incremental Learning
 # Incremental-Learning-Benchmark
 Evaluate class incremental learning tasks shifting with popular continual learning algorithms.
 
-This repository implemented and modularized following algorithms with PyTorch:
+The implementation with PyTorch of these incremental learning algorithms and the source of the original paper come from the following contributions:
+
+- A-GEM: [code](https://github.com/facebookresearch/agem), [paper](https://arxiv.org/abs/1612.00796) (Overcoming catastrophic forgetting in neural networks)
 - EWC: [code](https://github.com/GT-RIPL/Continual-Learning-Benchmark/blob/master/agents/regularization.py), [paper](https://arxiv.org/abs/1612.00796) (Overcoming catastrophic forgetting in neural networks)
 - Online EWC: [code](https://github.com/GT-RIPL/Continual-Learning-Benchmark/blob/master/agents/regularization.py), [paper](https://arxiv.org/abs/1805.06370) 
 - SI: [code](https://github.com/GT-RIPL/Continual-Learning-Benchmark/blob/master/agents/regularization.py), [paper](https://arxiv.org/abs/1703.04200) (Continual Learning Through Synaptic Intelligence)
