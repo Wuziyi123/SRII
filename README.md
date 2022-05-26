@@ -2,7 +2,7 @@
 
 # An Incremental Learning Apporoach for Sustainable Regional Isolation and Integration
 
-This repository is the official implementation of [SRII: An Incremental Learning Apporoach for Sustainable Regional Isolation and Integration](https://*******). 
+This repository is the official implementation of [SRII: An Incremental Learning Apporoach for Sustainable Regional Isolation and Integration](https://github.com/Wuziyi123/SRII). 
 
 ***
 
@@ -55,6 +55,8 @@ conda activate <env_name>
 conda env create -f environment.yml -p <anaconda>/envs/<env_name>
 ```
 
+>📋  Describe how to set up the environment, e.g. pip/conda/docker commands, download datasets, etc...
+
 ## DataSet
 We conduct experiments on commonly used incremental learning bencnmarks: CIFAR100, miniImageNet.
   1. CIFAR100 is available at [cs.toronto.edu](https://www.cs.toronto.edu/~kriz/cifar.html).
@@ -62,13 +64,12 @@ We conduct experiments on commonly used incremental learning bencnmarks: CIFAR10
 
 >📋  Describe how to set up the environment, e.g. pip/conda/docker commands, download datasets, etc...
 
+
 ## Pre-trained Models
 
 You can download pretrained models here:
 
 - [My pre-trained model](https://drive.google.com/file/d/1iSd466hB69USclAyxuqK07LxzHFe8SCA/view?usp=sharing) trained on CIFAR100. 
-
->📋  Give a link to where/how the pretrained models can be downloaded and how they were trained (if applicable).  Alternatively you can have an additional column in your results table with a link to the models.
 
 ***
 
