@@ -114,7 +114,7 @@ In the following tables, we provide detailed test accuracies of each method unde
 
 These results are also reported in the figures of the paper.
 
-<img src="figures/Figure_5.jpg" width="840"></a>
+<img src="figures/Figure_5.png"></a>
 
 ## [CIFAR-100 10-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/class-incremental-learning-on-cifar100)
 
