@@ -62,8 +62,6 @@ We conduct experiments on commonly used incremental learning bencnmarks: CIFAR10
   1. CIFAR100 is available at [cs.toronto.edu](https://www.cs.toronto.edu/~kriz/cifar.html).
   2. miniImageNet is available at [Our Google Drive](https://drive.google.com/file/d/15WB2Q5vawJxai9vHrw5FGbPBKAeTTfBY).
 
->📋  Describe how to set up the environment, e.g. pip/conda/docker commands, download datasets, etc...
-
 
 ## Pre-trained Models
 
