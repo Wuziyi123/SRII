@@ -85,7 +85,7 @@ sh ./test.sh --model-file <mymodel.pth>
 Results are generated for various task sizes. See the main text for full details.
 Our model achieves the following performance on :
 
-## [CIFAR-100 10-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/image-classification-on-imagenet)
+## [CIFAR-100 10-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/class-incremental-learning-on-cifar100)
 
 tasks | 10 | 20 | 30 | 40 | 50 | 60 | 70 | 80 | 90 | 100 | Avg |
 :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -101,7 +101,7 @@ S&B | 87.2 | 81.47 | 77.52 | 73.64 | 69.15 | 64.66 | 61.55 | 59.05 | 55.31 | 52.
 Upper Bound | 87.3 | 84.72 | 82.43 | 81.59 | 79.74 | 78.64 | 78.42 | 77.11 | 76.85 | 76.32 | **80.30** 
 Ours (SRII) | **90.5** | **85.5** | **82.52** | **80** | **76.08** | **72.11** | **68.74** | **64.14** | **61.97** | **60.25** | **74.18**
 
-## [miniImageNet 10-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/image-classification-on-imagenet)
+## miniImageNet 10-Stage (with 2000 image coreset)
 
 tasks | 10 | 20 | 30 | 40 | 50 | 60 | 70 | 80 | 90 | 100 | Avg |
 :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -113,7 +113,7 @@ ABD | 93.3 | 78.39 | 73.86 | 66.54 | 58.94 | 53.24 | 48.01 | 43.73 | 39.93 | 38.
 Upper Bound | 89.5 | 86.71 | 84.13 | 83.25 | 81.56 | 82.14 | 80.57 | 79.11 | 78.88 | 78.32 | **82.42** 
 Ours (SRII) | **92.3** | **87.69** | **84.18** | **81.57** | **77.57** | **73.84** | **71.04** | **67.36** | **64.19** | **62.48** | **76.22**
 
-## [miniImageNet 5-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/image-classification-on-imagenet)
+## miniImageNet 5-Stage (with 2000 image coreset)
 
 tasks | 5 | 20 | 40 | 60 | 80 | 100 | Avg |
 :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
