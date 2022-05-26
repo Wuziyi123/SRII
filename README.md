@@ -1,8 +1,17 @@
->📋  A template README.md for code accompanying a Machine Learning paper
+# Class-Incremental Learning
 
-# An Incremental Learning Apporoach for Sustainable Regional Isolation and Integration
+[![LICENSE](https://img.shields.io/badge/license-MIT-green?style=flat-square)](https://github.com/yaoyao-liu/class-incremental-learning/blob/master/LICENSE)
+[![Python](https://img.shields.io/badge/python-3.6-blue.svg?style=flat-square&logo=python&color=3776AB&logoColor=3776AB)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/pytorch-1.2.0-%237732a8?style=flat-square&logo=PyTorch&color=EE4C2C)](https://pytorch.org/)
 
-This repository is the official implementation of [SRII: An Incremental Learning Apporoach for Sustainable Regional Isolation and Integration](https://github.com/Wuziyi123/SRII). 
+***
+
+
+# Paper
+
+- An Incremental Learning Apporoach for Sustainable Regional Isolation and Integration 
+
+This repository is the official implementation of [SRII: An Incremental Learning Apporoach for Sustainable Regional Isolation and Integration](https://*******). 
 
 ***
 
