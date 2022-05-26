@@ -12,13 +12,17 @@ Evaluate class incremental learning tasks shifting with popular continual learni
 
 The implementation with PyTorch of these incremental learning algorithms and the source of the original paper come from the following contributions:
 
-- A-GEM: [code](https://github.com/facebookresearch/agem), [paper](https://openreview.net/forum?id=Hkf2_sC5FX) (Efficient lifelong learning with A-GEM)
-- EWC: [code](https://github.com/GT-RIPL/Continual-Learning-Benchmark/blob/master/agents/regularization.py), [paper](https://arxiv.org/abs/1612.00796) (Overcoming catastrophic forgetting in neural networks)
-- Online EWC: [code](https://github.com/GT-RIPL/Continual-Learning-Benchmark/blob/master/agents/regularization.py), [paper](https://arxiv.org/abs/1805.06370) 
-- SI: [code](https://github.com/GT-RIPL/Continual-Learning-Benchmark/blob/master/agents/regularization.py), [paper](https://arxiv.org/abs/1703.04200) (Continual Learning Through Synaptic Intelligence)
-- MAS: [code](https://github.com/GT-RIPL/Continual-Learning-Benchmark/blob/master/agents/regularization.py), [paper](https://eccv2018.org/openaccess/content_ECCV_2018/papers/Rahaf_Aljundi_Memory_Aware_Synapses_ECCV_2018_paper.pdf) (Memory Aware Synapses: Learning what (not) to forget)
-- GEM: [code](https://github.com/GT-RIPL/Continual-Learning-Benchmark/blob/master/agents/exp_replay.py), [paper](https://arxiv.org/abs/1706.08840) (Gradient Episodic Memory for Continual Learning)
-- (More are coming)
+- A-GEM: [paper](https://openreview.net/forum?id=Hkf2_sC5FX) (Efficient lifelong learning with A-GEM)
+- EMR: [paper](https://arxiv.org/abs/1902.10486) (On Tiny Episodic Memories in Continual Learning)
+- iCaRL: [paper](https://ieeexplore.ieee.org/document/8100070) (icarl: Incremental classifier and representation learning)
+- LUCIR: [paper](https://openaccess.thecvf.com/content_CVPR_2019/html/Hou_Learning_a_Unified_Classifier_Incrementally_via_Rebalancing_CVPR_2019_paper.html) (Learning a Unified Classifier Incrementally via Rebalancing)
+- LwF: [paper](https://ieeexplore.ieee.org/document/8107520) (Learning without forgetting)
+- EWC: [paper](https://arxiv.org/abs/1612.00796) (Overcoming catastrophic forgetting in neural networks)
+- ABD: [paper](https://ieeexplore.ieee.org/document/9711051) (Always be dreaming: A new approach for data-free class-incremental learning)
+- SCR: [paper](https://ieeexplore.ieee.org/document/9522763) (Supervised contrastive replay: Revisiting the nearest class mean classifier in online class-incremental continual learning)
+- S&B: [paper](https://arxiv.org/abs/2107.01349) (Split-and-Bridge: Adaptable Class Incremental Learning within a Single Neural Network)
+- E2E: [paper](https://arxiv.org/abs/1807.09536) (End-to-end incremental learning)
+- Bic: [paper](https://openaccess.thecvf.com/content_CVPR_2019/html/Wu_Large_Scale_Incremental_Learning_CVPR_2019_paper.html) (Large scale incremental learning)
 
 ***
 
