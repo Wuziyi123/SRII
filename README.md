@@ -104,8 +104,15 @@ sh ./test.sh --model-file <mymodel.pth>
 
 # Results
 
-Results are generated for various task sizes. See the main text for full details.
-Our model achieves the following performance on :
+In the following tables, we provide detailed test accuracies of each method under different settings of benchmark datasets and CNN models. The reported results are the mean accuracies averaged over 5 or 10 runs.
+
+**Upper Bound**. Joint training, equivalent to retraining the model on all known data, works best. Therefore, it is often considered a "performance upper bound for incremental learning", but the training cost is too high.
+**10-Stage or 10 Stages**. We divide the dataset containing 100 classes into 10 incremental steps and add 10 classes in each incremental step.
+**5-Stage or 5 Stages**. We divide the dataset containing 100 classes into 5 incremental steps and take the learning of 5 classes as the starting point. The first incremental step learns 15 classes, and the next four incremental steps add 20 classes at a time.
+
+These results are also reported in the figures of the paper.
+
+![image](https://github.com/Wuziyi123/SRII/blob/main/figures/Figure_5.jpg)
 
 ## [CIFAR-100 10-Stage (with 2000 image coreset)](https://paperswithcode.com/sota/class-incremental-learning-on-cifar100)
 
