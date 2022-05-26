@@ -10,7 +10,7 @@ This repository is the official implementation of [SRII: An Incremental Learning
 # Incremental-Learning-Benchmark
 Evaluate class incremental learning tasks shifting with popular continual learning algorithms.
 
-The implementation with PyTorch of these incremental learning algorithms and the source of the original paper come from the following contributions:
+The benchmarks come from the following contributions:
 
 - A-GEM: [paper](https://openreview.net/forum?id=Hkf2_sC5FX) (Efficient lifelong learning with A-GEM)
 - EMR: [paper](https://arxiv.org/abs/1902.10486) (On Tiny Episodic Memories in Continual Learning)
