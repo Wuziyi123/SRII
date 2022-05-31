@@ -77,7 +77,7 @@ You can download `pretrained model` here:
 
 - [My pre-trained model](https://drive.google.com/file/d/1iSd466hB69USclAyxuqK07LxzHFe8SCA/view?usp=sharing) trained on CIFAR100. 
 
-You can download `test model` here, then Then put it under the `model directory`:
+You can download `test model` here, then put it under the `model directory`:
 
 - [My test model](https://drive.google.com/file/d/1iSd466hB69USclAyxuqK07LxzHFe8SCA/view?usp=sharing) trained on CIFAR100.
 
