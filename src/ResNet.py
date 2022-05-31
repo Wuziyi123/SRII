@@ -283,17 +283,6 @@ class ResNet(nn.Module):
         self.conv_gff2_1 = conv3x3(in_planes=256, out_planes=256, stride=1)
         self.conv_gff3_1 = conv3x3(in_planes=256, out_planes=256, stride=1)
 
-        # self.bn_g2_up = nn.BatchNorm2d(128)
-
-        # self.conv_gff3_down = conv3x3(in_planes=256, out_planes=256, stride=1)
-
-        # self.conv_concat = nn.Conv2d(in_channels=512, out_channels=256, kernel_size=1, stride=1, padding=0)
-
-        # self.conv_gff2 = conv3x3(in_planes=64, out_planes=128, stride=2)
-        # self.conv_fusion1 = conv3x3(in_planes=256, out_planes=128, stride=1)
-        # self.conv_gff3 = conv3x3(in_planes=128, out_planes=256, stride=2)
-        # self.conv_fusion2 = conv3x3(in_planes=512, out_planes=256, stride=1)
-
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
@@ -339,17 +328,6 @@ class ResNet(nn.Module):
                 if m.bias is not None:
                     init.constant_(m.bias, 0)
 
-    # def forward_once(self, x):
-    #     x = self.conv1(x)
-    #     x = self.bn1(x)
-    #     x = self.relu(x)
-    #     x = self.layer1(x)
-    #     x = self.layer2(x)
-    #     x = self.layer3(x)
-    #     x = self.layer4(x)
-    #     x = self.feature(x)
-    #     x = x.view(x.size(0), -1)
-    #     return x
 
     def forward_once(self, x):
         x = self.conv1(x)
@@ -396,10 +374,6 @@ class ResNet(nn.Module):
         # g2_down = self.conv_gff2(l2_down)
         # g2_down = torch.sigmoid(g2_down)
 
-        # if a > 0:
-        #     l2_fusion = 0.9 * (1 + g2) * layer2 + 0.1 * (1 - g2) * (g2_down * x2n_down)
-        # else:
-        #     l2_fusion = layer2
 
         x = self.layer3(x)
         layer3 = x
@@ -434,41 +408,14 @@ class ResNet(nn.Module):
 
         if a > 0:
             after_fusion = (1 - a) * (1 + g3) * layer3 + a * (1 - g3) * \
-                           (g3_down * x3n_down)  # 0.06
-            # after_fusion = 0.9 * (1 + g3) * layer3 + 0.1 * (1 - g3) * \
-            #                (g3_down * x3n_down + g1_down * x1n_down)
-            # after_fusion = layer3
-            # c = torch.cat((layer3, x3n_down), dim=1)
-            # after_fusion = self.conv_concat(c)
-            # after_fusion = self.relu(c)
-            # print("")
-            # after_fusion = (1 - a) * (1 + g3) * layer3 + a * (1 - g3) * \
-            #             (x3n_down * g3_down)
-            # after_fusion = layer3
-            # after_fusion = layer3 + x3n_down
-            # after_fusion = (1 - a) * (1 + g3) * x3n + a * (1 - g3) * \
-            #                (g1 * x1n + g2 * x2n)
+                           (g3_down * x3n_down) + 0.03 * (1 - g3) * g2 * x2n
         else:
             after_fusion = layer3
-            # after_fusion = layer3
-        # mask = torch.add(torch.mul(gate, -50), 10 * prune_rate)
-        # mask = torch.ones_like(out) / torch.add(torch.exp(mask), 1)
-        # out = torch.mul(out, mask)
-
 
         x = self.layer4(after_fusion)
 
         x = self.feature(x)
         x = x.view(x.size(0), -1)
-
-        # if a > 0:
-        #     x = x
-            # after_fusion = (1 - a) * (1 + g3) * layer3 + a * (1 - g3) * (x3n_down * g3_down)
-            # after_fusion = (1 - a) * (1 + g3) * x3n + a * (1 - g3) * \
-            #                (g1 * x1n + g2 * x2n)
-        # else:
-        #     # after_fusion = (1 + g3) * x3n + (1 - g3) * (g1 * x1n + g2 * x2n)
-        #     after_fusion = layer3
 
         return x
 
