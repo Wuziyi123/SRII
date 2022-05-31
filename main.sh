@@ -1,1 +1,2 @@
-PYTHONIOENCODING=utf-8 /root/anaconda3/envs/pytorch/bin/python3 ./src/main.py
+cd src
+PYTHONIOENCODING=utf-8 /root/anaconda3/envs/pytorch/bin/python3 main.py --input_data $2 --pre_trained $4

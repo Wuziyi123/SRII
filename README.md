@@ -100,7 +100,7 @@ sh ./main.sh --input_data dataset --pre_trained pretrained/cifar100-pretrained.p
 To evaluate my model, run:
 
 ```eval
-sh ./test.sh --model-file <mymodel.pth>
+sh ./test.sh --model-file model/test-20classes.pth.tar
 ```
 
 
