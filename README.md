@@ -71,11 +71,15 @@ We conduct experiments on commonly used incremental learning bencnmarks: CIFAR10
   2. miniImageNet is available at [Our Google Drive](https://drive.google.com/file/d/15WB2Q5vawJxai9vHrw5FGbPBKAeTTfBY).
 
 
-## Pre-trained Models
+## Models
 
-You can download pretrained models here:
+You can download pretrained model here:
 
 - [My pre-trained model](https://drive.google.com/file/d/1iSd466hB69USclAyxuqK07LxzHFe8SCA/view?usp=sharing) trained on CIFAR100. 
+
+You can download test model here:
+
+- [My test model](https://drive.google.com/file/d/1iSd466hB69USclAyxuqK07LxzHFe8SCA/view?usp=sharing) trained on CIFAR100.
 
 ***
 
