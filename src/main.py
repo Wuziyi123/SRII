@@ -33,7 +33,7 @@ def main(parser_data):
     accuracy = 0
     branch_model.model.fc = None
 
-    # 如果指定了上次训练保存的权重文件地址，则接着上次结果接着训练
+    # If the pretrained saved weight file address is specified:
     print(parser_data.pre_trained)
     if parser_data.pre_trained != "":
         if os.path.isfile(parser_data.pre_trained):
@@ -65,7 +65,8 @@ def main(parser_data):
 
 if __name__ == "__main__":
     version = torch.version.__version__[:5]  # example: 1.6.0
-    # 因为使用的官方的混合精度训练是1.6.0后才支持的，所以必须大于等于1.6.0
+    # Because the official mixed accuracy training is only supported after 1.6.0,
+    # it must be greater than or equal to 1.6.0
     if version < "1.6.0":
         raise EnvironmentError("pytorch version must be 1.6.0 or above")
 
@@ -73,25 +74,24 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description=__doc__)
 
-    # 训练设备类型
+    # The type of training equipment
     parser.add_argument('--device', default='cuda:0', help='device')
     # learning rate
     parser.add_argument('--learning_rate', default=2.0, type=float, help='learning rate')
-    # 训练数据集的根目录
+    # Root directory of training dataset
     parser.add_argument('--input_data', default='dataset', type=str, help='path of dataset', metavar='PATH_TO_DATA')
-    # 文件保存地址
+    # Storage address
     parser.add_argument('--output-dir', default='./save_weights', help='path where to save')
-    # 若需要接着上次训练，则指定上次训练保存权重文件地址
-    # ./save_weights/resNetFpn-model-4.pth
+    # pretrained weights
     parser.add_argument('--pre_trained', default='pretrained/cifar100-pretrained.pth.tar', type=str, help='pre-trained model', metavar='PRE-TRAINED MODEL')
-    # 训练的batch size
+    # batch size
     parser.add_argument('--batch_size', default=128, type=int, metavar='N',
                         help='batch size when training.')
 
     args = parser.parse_args()
     print(args)
 
-    # 检查保存权重文件夹是否存在，不存在则创建
+    # Check whether the folder for saving weights exists. If it does not exist, create ...
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
 
