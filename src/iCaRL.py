@@ -555,8 +555,8 @@ class iCaRLmodel:
                         else:
                             print("=> no checkpoint found at '{}'".format("best.pth.tar"))
 
-                        print("store merge weights!")
-                        filename = "temp-merge-" + str(incremental) + ".pth.tar"
+                        print("store weights for test!")
+                        filename = "test-" + str(incremental) + ".pth.tar"
                         torch.save({
                             'state_dict': up_model.model.state_dict(),
                             'cfg_mask': up_model.cfg_mask,
@@ -567,7 +567,7 @@ class iCaRLmodel:
                             'weight': up_model.weight,
                             'bias': up_model.bias,
                             'down_branch': self.model.state_dict()
-                        }, filename)  # split-incremental-2.pth.tar
+                        }, filename)
                         # if incremental == 2:
                         #     exit(-1)
 
