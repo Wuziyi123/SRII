@@ -79,7 +79,7 @@ You can download `pretrained model` here:
 
 You can download `test model` here, then put it under the `model directory`:
 
-- [My test model](https://drive.google.com/file/d/1iSd466hB69USclAyxuqK07LxzHFe8SCA/view?usp=sharing) trained on CIFAR100.
+- [My test model](https://drive.google.com/file/d/1pJDbDGa2uUCfCABCTfrh-c_CejzZ9C21/view?usp=sharing) trained on CIFAR100.
 
 ***
 
