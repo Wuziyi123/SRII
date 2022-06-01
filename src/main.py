@@ -30,7 +30,7 @@ def main(parser_data):
     img_size = 32
     task_size = 10
     memory_size = 2000
-    epochs = 1
+    epochs = 100
     batch_size = parser_data.batch_size
     learning_rate = parser_data.learning_rate
     data_path = parser_data.input_data
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     # Storage address
     parser.add_argument('--output-dir', default='./save_weights', help='path where to save')
     # pretrained weights  pretrained/cifar100-pretrained.pth.tar
-    parser.add_argument('--pre_trained', default='', type=str, help='pre-trained model', metavar='PRE-TRAINED MODEL')
+    parser.add_argument('--pre_trained', default='pretrained/cifar100-pretrained.pth.tar', type=str, help='pre-trained model', metavar='PRE-TRAINED MODEL')
     # batch size
     parser.add_argument('--batch_size', default=64, type=int, metavar='N',
                         help='batch size when training.')
