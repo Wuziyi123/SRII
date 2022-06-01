@@ -78,7 +78,8 @@ We conduct experiments on commonly used incremental learning bencnmarks: CIFAR10
 	  ...
   ├── test.csv
   ├── val.csv
-  └── train.csv
+  ├── train.csv
+  └── imagenet_class_index.json
   ```
 
 
