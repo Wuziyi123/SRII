@@ -68,7 +68,18 @@ conda env create -f environment.yml -p <anaconda>/envs/<env_name>
 ## DataSet
 We conduct experiments on commonly used incremental learning bencnmarks: CIFAR100, miniImageNet.
   1. `CIFAR100` is available at [cs.toronto.edu](https://www.cs.toronto.edu/~kriz/cifar.html). Download `CIFAR100` and put it under the `dataset directory`.
-  2. `miniImageNet` is available at [Our Google Drive](https://drive.google.com/file/d/15WB2Q5vawJxai9vHrw5FGbPBKAeTTfBY). Download `miniImageNet` and put it under the `mini-imagenet directory`.
+  2. `miniImageNet` is available at [Our Google Drive](https://drive.google.com/file/d/15WB2Q5vawJxai9vHrw5FGbPBKAeTTfBY).
+  * Download `miniImageNet` and make it looks like:
+  ```shell
+  mini-imagenet/
+  ├── images
+	  ├── n0210891500001298.jpg  
+	  ├── n0287152500001298.jpg 
+	  ...
+  ├── test.csv
+  ├── val.csv
+  └── train.csv
+  ```
 
 
 ## Models
