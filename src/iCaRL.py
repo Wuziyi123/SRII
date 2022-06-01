@@ -129,10 +129,12 @@ class iCaRLmodel:
         self.test_dataset.getBranchTestData(classes)
         train_loader = DataLoader(dataset=self.train_dataset,
                                   shuffle=True,
+                                  num_workers=8,
                                   batch_size=self.batchsize)
 
         test_loader = DataLoader(dataset=self.test_dataset,
                                  shuffle=True,
+                                 num_workers=8,
                                  batch_size=self.batchsize)
 
         return train_loader, test_loader
@@ -143,10 +145,12 @@ class iCaRLmodel:
 
         train_loader = DataLoader(dataset=self.train_dataset,
                                   shuffle=True,
+                                  num_workers=8,
                                   batch_size=self.batchsize)
 
         test_loader = DataLoader(dataset=self.test_dataset,
                                  shuffle=True,
+                                 num_workers=8,
                                  batch_size=self.batchsize)
 
         return train_loader, test_loader
@@ -156,6 +160,7 @@ class iCaRLmodel:
 
         train_loader = DataLoader(dataset=self.train_dataset,
                                   shuffle=True,
+                                  num_workers=8,
                                   batch_size=self.batchsize)
 
         return train_loader
@@ -209,7 +214,7 @@ class iCaRLmodel:
         elif iter == 0 and incremental:
             opt = optim.SGD(self.model.parameters(), lr=2.0, weight_decay=0)
         else:
-            opt = optim.SGD(self.model.parameters(), lr=2.0, weight_decay=0)
+            opt = optim.SGD(self.model.parameters(), lr=2.0, weight_decay=0.00001, momentum=0.9, nesterov=True)
 
         opt.zero_grad()
         opt_down.zero_grad()
@@ -555,7 +560,7 @@ class iCaRLmodel:
                         else:
                             print("=> no checkpoint found at '{}'".format("best.pth.tar"))
 
-                        print("store weights for test!")
+                        print("store merge weights!")
                         filename = "test-" + str(incremental) + ".pth.tar"
                         torch.save({
                             'state_dict': up_model.model.state_dict(),
@@ -567,7 +572,7 @@ class iCaRLmodel:
                             'weight': up_model.weight,
                             'bias': up_model.bias,
                             'down_branch': self.model.state_dict()
-                        }, filename)
+                        }, filename)  # split-incremental-2.pth.tar
                         # if incremental == 2:
                         #     exit(-1)
 

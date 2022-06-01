@@ -72,6 +72,11 @@ class iminiImageNet(ImageNet100):
         if classes[0] >= 0:
             for label in range(classes[0], classes[1]):
                 data = self.data[np.array(self.targets) == label]
+                if classes[1] == 50:
+                    classes_idx = np.asarray(np.arange(data.shape[0]), dtype=int)
+                    select_num = int(data.shape[0] / 3)
+                    choose_classes = np.random.choice(classes_idx, select_num, replace=False)
+                    data = data[choose_classes]
                 datas.append(data)
                 labels.append(np.full((data.shape[0]), label))
         # datas = [(500,32,32,3),(500,32,32,3)...]   labels = [(500,),(500,)...]
@@ -82,7 +87,6 @@ class iminiImageNet(ImageNet100):
 
 
     def getDoubleBranchTrainData(self,up_model,classes, i):
-
         self.up_model_TrainData, self.up_model_TrainLabels = up_model.train_dataset.TrainData,\
                                                  up_model.train_dataset.TrainLabels
         add_len = up_model.memory_size
@@ -99,12 +103,22 @@ class iminiImageNet(ImageNet100):
             self.TrainData = np.concatenate((self.TrainData[:rehearsal_Size], self.TrainData), axis=0)
             self.TrainLabels = np.concatenate((self.TrainLabels[:rehearsal_Size], self.TrainLabels), axis=0)
 
+        # choice = np.random.choice(4800, 2000)
+        # add_data = self.TrainData[choice]
+        # add_label = self.TrainLabels[choice]
+        # if add_len:
+        #     self.TrainData = np.concatenate((add_data, self.TrainData), axis=0)
+        #     self.TrainLabels = np.concatenate((add_label, self.TrainLabels), axis=0)
+
         print("the size of train set is %s"%(str(self.TrainData.shape)))
         print("the size of train label is %s"%str(self.TrainLabels.shape))
 
     def getDoubleBranchTrainItem(self, index):
-        img, target = Image.fromarray(self.TrainData[index]), self.TrainLabels[index]
-        up_img, up_target = Image.fromarray(self.up_model_TrainData[index]), self.up_model_TrainLabels[index]
+        img, target = Image.open(self.TrainData[index]), self.TrainLabels[index]
+        up_img, up_target = Image.open(self.up_model_TrainData[index]), self.up_model_TrainLabels[index]
+
+        # img, target = Image.fromarray(self.TrainData[index]), self.TrainLabels[index]
+        # up_img, up_target = Image.fromarray(self.up_model_TrainData[index]), self.up_model_TrainLabels[index]
 
         if self.transform:
             img = self.transform(img)

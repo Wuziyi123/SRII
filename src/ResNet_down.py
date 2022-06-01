@@ -145,19 +145,24 @@ class Bottleneck(nn.Module):
 
 class ResNet_down(nn.Module):
 
-    def __init__(self, block, layers, num_classes=100):
+    def __init__(self, block, layers, isCifar=True, num_classes=100):
         self.inplanes = 64
         super(ResNet_down, self).__init__()
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1,
-                               bias=False)
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.isCifar = isCifar
         self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.ReLU(inplace=True)
-        self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+
+        if self.isCifar:
+            self.maxpool = None
+        else:
+            self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+
         self.layer1 = self._make_layer(block, 64, layers[0])
         self.layer2 = self._make_layer(block, 128, layers[1], stride=2)
         self.layer3 = self._make_layer(block, 256, layers[2], stride=2)
         self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
-        self.feature = nn.AvgPool2d(4, stride=1)
+        self.feature = nn.AdaptiveAvgPool2d((1, 1))
         self.fc = nn.Linear(512 * block.expansion, num_classes)
 
         self.conv_gff1 = conv3x3(in_planes=64, out_planes=256, stride=4)
@@ -212,7 +217,8 @@ class ResNet_down(nn.Module):
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
-        # x = self.maxpool(x)
+        if not self.isCifar:
+            x = self.maxpool(x)
         x = self.layer1(x)
         layer1 = x
         x = self.layer2(x)
@@ -264,7 +270,8 @@ class ResNet_down(nn.Module):
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
-        #x = self.maxpool(x)
+        if not self.isCifar:
+            x = self.maxpool(x)
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
@@ -283,12 +290,12 @@ class ResNet_down(nn.Module):
         return x
 
 
-def branch_resnet18_cbam(pretrained=False, **kwargs):
+def branch_resnet18_cbam(isCifar=True, pretrained=False, **kwargs):
     """Constructs a ResNet-18 model.
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
-    model = ResNet_down(BasicBlock, [2, 2, 2, 2], **kwargs)
+    model = ResNet_down(BasicBlock, [2, 2, 2, 2], isCifar, **kwargs)
     if pretrained:
         pretrained_state_dict = model_zoo.load_url(model_urls['resnet18'])
         now_state_dict        = model.state_dict()
