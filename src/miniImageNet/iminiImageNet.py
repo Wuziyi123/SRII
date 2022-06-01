@@ -1,4 +1,4 @@
-from ImageNet100 import *
+from src.miniImageNet.ImageNet100 import *
 import numpy as np
 from PIL import Image
 

@@ -11,17 +11,15 @@ from torch.nn import functional as F
 from PIL import Image
 import torch.optim as optim
 
-import my_utils
-from myNetwork import network
-from iCIFAR100 import iCIFAR100
+import utils.my_utils
+from src.myNetwork import network
+from src.miniImageNet.iminiImageNet import iminiImageNet
 from torch.utils.data import DataLoader
 
-from iCIFAR100 import *
-from ResNet import ResNet
+from src.miniImageNet.iminiImageNet import *
+from src.ResNet import ResNet
 
 import sys
-
-from centerloss import CenterLoss
 
 
 class Logger(object):
@@ -51,43 +49,43 @@ def get_one_hot(target, num_class):
     return one_hot
 
 
-class iCaRLmodel:
+class miniImagemodel:
 
-    def __init__(self, data_path, numclass, feature_extractor, batch_size, task_size, memory_size, epochs, learning_rate):
+    def __init__(self, file_path, numclass, feature_extractor, batch_size, task_size, memory_size, epochs, learning_rate):
 
-        super(iCaRLmodel, self).__init__()
+        super(miniImagemodel, self).__init__()
         self.epochs = epochs
         self.learning_rate = learning_rate
         self.model = network(numclass, feature_extractor)
         self.exemplar_set = []
         self.class_mean_set = []
         self.numclass = numclass
-        self.transform = transforms.Compose([  # transforms.Resize(img_size),
+        self.transform = transforms.Compose([transforms.Resize(118),
+            transforms.CenterCrop(112),
             transforms.ToTensor(),
-            transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))])
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
         self.old_model = None
 
-        self.train_transform = transforms.Compose([  # transforms.Resize(img_size),
-            transforms.RandomCrop((32, 32), padding=4),
-            transforms.RandomHorizontalFlip(p=0.5),
-            transforms.ColorJitter(brightness=0.24705882352941178),
-            transforms.ToTensor(),
-            transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))])
+        self.train_transform = transforms.Compose([transforms.RandomResizedCrop(112),
+                                         transforms.RandomHorizontalFlip(p=0.5),
+                                         transforms.ToTensor(),
+                                         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
 
-        self.test_transform = transforms.Compose([  # transforms.Resize(img_size),
-            transforms.ToTensor(),
-            transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))])
+        self.test_transform = transforms.Compose([transforms.Resize(128),
+                                       transforms.CenterCrop(112),
+                                       transforms.ToTensor(),
+                                       transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
 
         self.classify_transform = transforms.Compose([transforms.RandomHorizontalFlip(p=1.),
-                                                      # transforms.Resize(img_size),
+                                                      transforms.Resize(118),
+                                                      transforms.CenterCrop(112),
                                                       transforms.ToTensor(),
-                                                      transforms.Normalize((0.5071, 0.4867, 0.4408),
-                                                                           (0.2675, 0.2565, 0.2761))])
+                                                      transforms.Normalize([0.485, 0.456, 0.406],
+                                                                           [0.229, 0.224, 0.225])])
 
-        file_path = os.path.join(os.getcwd(), data_path)
-        # file_path = os.path.join(os.path.dirname(__file__), 'dataset')
-        self.train_dataset = iCIFAR100(file_path, transform=self.train_transform, download=True)
-        self.test_dataset = iCIFAR100(file_path, test_transform=self.test_transform, train=False, download=True)
+        # file_path = 'mini-imagenet/images'
+        self.train_dataset = iminiImageNet(file_path, transform=self.train_transform)
+        self.test_dataset = iminiImageNet(file_path, test_transform=self.test_transform, train=False)
 
         self.batchsize = batch_size
         self.memory_size = memory_size
@@ -98,7 +96,6 @@ class iCaRLmodel:
         self.weight = None
         self.bias = None
         self.cfg_mask = []
-        self.test_material = []
 
     # get incremental train data
     # incremental
@@ -115,11 +112,9 @@ class iCaRLmodel:
     def new_beforeTrain(self, i, up_model):
         self.model.eval()
         self.train_dataset.incremental = True
-
         branch_begin_class = i * self.task_size
         classes = [branch_begin_class, branch_begin_class + self.task_size]
         self.train_loader, self.test_loader = self._incremental_get_train_and_test_dataloader(up_model, classes, i)
-        # self.train_loader, self.test_loader = self._get_train_and_test_dataloader(classes)
         self.model.train()
         self.model.to(device)
 
@@ -165,17 +160,6 @@ class iCaRLmodel:
 
         return train_loader
 
-    '''
-    def _get_old_model_output(self, dataloader):
-        x = {}
-        for step, (indexs, imgs, labels) in enumerate(dataloader):
-            imgs, labels = imgs.to(device), labels.to(device)
-            with torch.no_grad():
-                old_model_output = torch.sigmoid(self.old_model(imgs))
-            for i in range(len(indexs)):
-                x[indexs[i].item()] = old_model_output[i].cpu().numpy()
-        return x
-    '''
 
     # additional subgradient descent on the sparsity-induced penalty term
     def updateBN(self, model):
@@ -190,29 +174,23 @@ class iCaRLmodel:
         accuracy = 0
         best_map = 0.0
 
-        # centerloss = None
-        # opt_center = None
-        # if branch:
-        #     centerloss = CenterLoss(up_model.numclass, 512).to(device)
-        #     opt_center = optim.SGD(centerloss.parameters(), lr=0.5)
-
         opt_down = optim.SGD(self.model.parameters(), lr=self.learning_rate, weight_decay=0)
 
         for param in self.model.feature.parameters():
             param.requires_grad = True
 
         if iter == 1 and incremental:
-            opt = optim.SGD(up_model.model.parameters(), lr=up_model.learning_rate, weight_decay=0.00001, momentum=0.9,
+            opt = optim.SGD(self.model.parameters(), lr=self.learning_rate, weight_decay=0.00001, momentum=0.9,
                             nesterov=True)
         elif iter == 2 and incremental:
             for param in self.model.feature.parameters():
                 param.requires_grad = False
             pg = [p for p in self.model.parameters() if p.requires_grad]
-            opt = optim.SGD(pg, lr=self.learning_rate, weight_decay=0.00001, momentum=0.9, nesterov=True)
+            opt = optim.SGD(pg, lr=self.learning_rate, weight_decay=0.00001)
             classes = [self.numclass - self.task_size, self.numclass]
             self.train_loader = self._get_train_refine_dataloader(classes)
         elif iter == 0 and incremental:
-            opt = optim.SGD(self.model.parameters(), lr=2.0, weight_decay=0)
+            opt = optim.SGD(self.model.parameters(), lr=self.learning_rate, weight_decay=0)
         else:
             opt = optim.SGD(self.model.parameters(), lr=2.0, weight_decay=0.00001, momentum=0.9, nesterov=True)
 
@@ -220,7 +198,6 @@ class iCaRLmodel:
         opt_down.zero_grad()
 
         for epoch in range(self.epochs):
-            # if not branch:
             if iter == 2 and incremental:
                 if epoch == 0:
                     for p in opt.param_groups:
@@ -250,42 +227,28 @@ class iCaRLmodel:
                     else:
                         for p in opt.param_groups:
                             p['lr'] = self.learning_rate / 62.5
-            # else:
-            #     if epoch == 48:
-            #         for p in opt.param_groups:
-            #             p['lr'] = up_model.learning_rate / 2.5
-            #     elif epoch == 62:
-            #         for p in opt.param_groups:
-            #             p['lr'] = up_model.learning_rate / 12.5
-            #     elif epoch == 80:
-            #         for p in opt.param_groups:
-            #             p['lr'] = up_model.learning_rate / 12.5
 
             if branch:
                 if epoch > 40 and epoch < 48:
                     for p in opt_down.param_groups:
                         p['lr'] = self.learning_rate / (1.0 + 0.15 * (epoch - 40))
                 if epoch == 48:
-                    # opt_down = optim.SGD(self.model.parameters(), lr=self.learning_rate / 5)
                     for p in opt_down.param_groups:
                         p['lr'] = self.learning_rate / 2.5
                 elif epoch == 62:
-                    # opt_down = optim.SGD(self.model.parameters(), lr=self.learning_rate / 25)
                     for p in opt_down.param_groups:
                         p['lr'] = self.learning_rate / 12.5
                 elif epoch == 80:
-                    # opt_down = optim.SGD(self.model.parameters(), lr=self.learning_rate / 125)
                     for p in opt_down.param_groups:
                         p['lr'] = self.learning_rate / 62.5
 
-            # print(self.model.feature)
             if not branch:
                 model = self.model.feature
             else:
                 model = up_model.model.feature
 
             if not branch:  # Basic training without auxiliary branches enabled
-                for step, (indexs, images, target) in enumerate(self.train_loader):
+                for step, (indexs, images, target) in enumerate(self.train_loader):  # 下分支的train_loader
                     images, target = images.to(device), target.to(device)
                     enable_amp = True if "cuda" in device.type else False
                     scaler = amp.GradScaler(enabled=enable_amp)
@@ -317,12 +280,10 @@ class iCaRLmodel:
                             for k, m in enumerate(model.modules()):
                                 if isinstance(m, nn.BatchNorm2d):
                                     weight_copy = m.weight.data.clone()
-                                    mask = weight_copy.abs().gt(thre).float().cuda()
+                                    mask = weight_copy.abs().gt(thre).float().to(device)
                                     pruned = pruned + mask.shape[0] - torch.sum(mask)
                                     cfg.append(int(torch.sum(mask)))
                                     cfg_mask.append(mask.clone())
-                                    # print('layer index: {:d} \t total channel: {:d} \t remaining channel: {:d}'.
-                                    #       format(k, mask.shape[0], int(torch.sum(mask))))
                                 elif isinstance(m, nn.MaxPool2d):
                                     cfg.append('M')
 
@@ -345,11 +306,9 @@ class iCaRLmodel:
                                     end_mask = cfg_mask[layer_id_in_cfg]
                     # end of if incremental and not iter:
 
-
-                    # old_num = self.numclass - 11
-                    # new_index = torch.nonzero(target > old_num).squeeze(1)
                     new_num = self.numclass - 10
                     old_index = torch.nonzero(target < new_num).squeeze(1)
+
                     with amp.autocast(enabled=enable_amp):
                         if incremental and iter == 1:
                             pass
@@ -357,14 +316,16 @@ class iCaRLmodel:
                             outputs = self.model(images)
                             num_old_classes = self.numclass - 10
                             T = 2
-                            alpha = 0.25  # 0.25
+                            alpha = 0.24  # 0.25
                             ref_outputs = self.old_model(images)
-                            loss1 = nn.KLDivLoss(reduction="batchmean")(F.log_softmax(outputs[:, :num_old_classes] / T, dim=1),
-                            F.softmax(ref_outputs.detach() / T, dim=1)) * T * T * alpha
+                            loss1 = nn.KLDivLoss(reduction="batchmean")(F.log_softmax(outputs[:, :num_old_classes] / T, dim=1), \
+                                                   F.softmax(ref_outputs.detach() / T,
+                                                             dim=1)) * T * T * alpha
 
                             new = outputs[old_index, new_num:]
                             old = outputs[old_index, :new_num]
                             if new.numel() and old.numel():
+
                                 new_pre_max_value = torch.max(new, dim=1)[0]
                                 old_pre_max_value = torch.max(old, dim=1)[0]
 
@@ -374,12 +335,12 @@ class iCaRLmodel:
                                 mm = sort_margin[idx_start:]
 
                                 scaled_mean = torch.mean(mm) / 20
-                                margin_loss = torch.log(1.98 + torch.clamp(scaled_mean, min=-1.17))
+                                margin_loss = torch.log(1.6 + torch.clamp(scaled_mean, min=-1.17))
                             else:
                                 margin_loss = torch.tensor(0)
 
                             loss2 = nn.CrossEntropyLoss()(outputs, target)
-                            loss_value = loss1 + loss2 + 0.36 * margin_loss  # 0.27
+                            loss_value = loss1 + loss2 + 0.36 * margin_loss
                         else:
                             output = self.model(images)  # output = (128,30)
                             output, target = output.to(device), target.to(device)
@@ -391,18 +352,14 @@ class iCaRLmodel:
                     if iter == 1:
                         self.updateBN(model)
                     elif incremental and not iter:
-                        # print(self.model)
-                        # exit(-1)
                         cfg_mask = self.cfg_mask
                         layer_id_in_cfg = 0
-                        # skip = [4, 5, 14, 15, 27, 28, 46, 47, 53, 54, 55, 56, 57, 58, 59]
+
                         skip = [7, 8, 12, 13, 17, 18, 20, 21, 22, 23, 24, 25, 26]
                         start_mask = torch.ones(3)
                         end_mask = cfg_mask[layer_id_in_cfg]
 
                         for name, m0 in self.model.named_modules():
-                            # is_mask = name.endswith("1_1") or name.endswith("2_1")
-                            # is_mask = name.endswith("gff") or name.endswith("2_1")
                             if isinstance(m0, nn.BatchNorm2d):
                                 layer_id_in_cfg += 1
                                 start_mask = end_mask.clone()
@@ -412,15 +369,13 @@ class iCaRLmodel:
                                 if layer_id_in_cfg not in skip:
                                     idx0 = np.squeeze(np.argwhere(np.asarray(start_mask.cpu().numpy())))
                                     idx1 = np.squeeze(np.argwhere(np.asarray(end_mask.cpu().numpy())))
-                                    # print('In shape: {:d} Out shape:{:d}'.format(idx0.shape[0], idx1.shape[0]))
                                     m0.weight.grad.data[:, idx0, :, :].mul_(0)
                                     m0.weight.grad.data[idx1, :, :, :].mul_(0)
-                        # print("")
+
                     scaler.step(opt)  # optimize
                     scaler.update()
 
                     end = len(self.train_loader) - 1
-
                     if epoch == 99 and step == end and incremental and iter == 0:
 
                         if os.path.isfile("best.pth.tar"):
@@ -442,7 +397,7 @@ class iCaRLmodel:
                             'test_loader': self.test_loader,
                             'weight': self.weight,
                             'bias': self.bias,
-                        }, filename)  # split-incremental-2.pth.tar
+                        }, filename)
 
                     if step and step % 27 == 0:
                         print('epoch:%d,step:%d,loss:%.4f' % (epoch, step, loss_value.item()))
@@ -458,25 +413,18 @@ class iCaRLmodel:
                         output = self.model(images)
                         output = output.to(device)
                         loss_down = nn.CrossEntropyLoss()(output, target)
-                    # loss_down.requires_grad_(True)
+
                     opt_down.zero_grad()
-                    # loss_down.backward()
                     scaler.scale(loss_down).backward()  # backward
-                    # opt_down.step()
                     self.model.only_down = False
                     scaler.step(opt_down)  # optimize
                     scaler.update()
-                    # if step and step % 27 == 0:
-                    #     print('epoch:%d,step:%d,loss:%.3f' % (epoch, step, loss_down.item()))
-
-                    # if step == 0:
-                    #     print(self.model.feature._modules["layer2"]._modules["0"].conv1.weight.grad.data)
 
                     self.model.eval()
                     self.model.getValue = True
                     with torch.no_grad():
                         x1n, g1, x2n, g2, x3n, g3 = self.model(images)
-                        # layer1, layer2, layer3 = self.model(images)
+
                     self.model.train()
                     self.model.getValue = False
                     # fusion_material_from_downBranch = None
@@ -484,20 +432,8 @@ class iCaRLmodel:
                     fusion_material_from_downBranch = [x1n, g1, x2n, g2, x3n, g3]
 
                     up_model.model.up_branch = True
-                    # 0.4-82.35  0.3-83.85(82.8-84.9)  0.6-83.0  0.2-82.45
-                    # if epoch < 81:
-                    #     a = 0.3 - epoch / 267
-                    # else:
-                    #     a = 0
-                    # a = 1
-                    # a = max(0.3 - epoch / 267, 0)
-                    a = max(0.1 - epoch / 800, 0)
 
-                    # a = max(0.5 - epoch / 0.8 * 2
-                    # T, 0)  # Baseline
-                    # a = 0.5 * sin((2π / 2T) * epoch)  # sin
-                    # a = 0.5 * cos((2π / 4T) * epoch)  # cos
-                    # a = max(0.5 - (0.5 / (T ^ 2)) * epoch ^ 2, 0)  # quartic function
+                    a = max(0.1 - epoch / 800, 0)
 
                     next_end = len(self.train_loader) - 2
                     if step == next_end:
@@ -529,15 +465,12 @@ class iCaRLmodel:
                             mm = sort_margin[idx_start:]
 
                             scaled_mean = torch.mean(mm) / 20
-                            margin_loss = torch.log(1.98 + torch.clamp(scaled_mean, min=-1.17))
+                            margin_loss = torch.log(1.6 + torch.clamp(scaled_mean, min=-1.17))
                         else:
                             margin_loss = torch.tensor(0)
 
                         loss2 = nn.CrossEntropyLoss()(outputs, up_targets)
-                        # center_loss = centerloss(feat, up_targets)
-                        # 0.3-84.5 0.32-
-                        # print(loss1,loss2)
-                        loss_up = loss1 + loss2 + 0.36 * margin_loss  # 0.29-0.13
+                        loss_up = loss1 + loss2 + 0.36 * margin_loss
 
                     opt.zero_grad()
                     # opt_center.zero_grad()
@@ -560,8 +493,8 @@ class iCaRLmodel:
                         else:
                             print("=> no checkpoint found at '{}'".format("best.pth.tar"))
 
-                        print("store merge weights!")
-                        filename = "test-" + str(incremental) + ".pth.tar"
+                        print("store weights for test!")
+                        filename = "test-miniimagenet-" + str(incremental) + ".pth.tar"
                         torch.save({
                             'state_dict': up_model.model.state_dict(),
                             'cfg_mask': up_model.cfg_mask,
@@ -572,13 +505,12 @@ class iCaRLmodel:
                             'weight': up_model.weight,
                             'bias': up_model.bias,
                             'down_branch': self.model.state_dict()
-                        }, filename)  # split-incremental-2.pth.tar
+                        }, filename)
                         # if incremental == 2:
                         #     exit(-1)
 
                     if step and step % 27 == 0:
                         print('epoch:%d,step:%d,loss:%.3f' % (epoch, step, loss_up.item()))
-
             #  end of else
 
             if branch:
@@ -596,15 +528,9 @@ class iCaRLmodel:
             if best_map == accuracy:
                 filename = "best.pth.tar"
                 print("store best weights!")
-                if not branch:
-                    torch.save({
-                        'state_dict': self.model.state_dict(),
-                    }, filename)  # split-incremental-2.pth.tar
-                else:
-                    torch.save({
-                        'state_dict': up_model.model.state_dict(),
-                        'down_branch': self.model.feature.state_dict()
-                    }, filename)  # split-incremental-2.pth.tar
+                torch.save({
+                    'state_dict': self.model.state_dict(),
+                }, filename)  # split-incremental-2.pth.tar
 
         if os.path.isfile("best.pth.tar"):
             print("=> loading checkpoint '{}'".format("best.pth.tar"))
@@ -647,17 +573,6 @@ class iCaRLmodel:
                 down_model.getValue = False
             predicts = torch.max(outputs, dim=1)[1] if mode == 1 else outputs
 
-            # if branch:
-            #     with torch.no_grad():
-            #         new_num = outputs.shape[1] - 11
-            #         new_index = torch.nonzero(predicts > new_num).squeeze(1)
-            #         new_imgs = imgs[new_index, ::]
-            #         outputs_new = down_model(new_imgs)
-            #     predicts_new = torch.max(outputs_new, dim=1)[1]
-            #     new_start = int(outputs.shape[1] - 10)
-            #     predicts_new = torch.add(predicts_new, new_start)
-            #     predicts[new_index] = predicts_new
-
             correct += (predicts.cpu() == labels.cpu()).sum()
             total += len(labels)
         accuracy = 100 * correct / total
@@ -691,8 +606,8 @@ class iCaRLmodel:
         self._reduce_exemplar_sets(m)
         for i in range(self.numclass - self.task_size, self.numclass):
             print('construct class %s examplar:' % (i), end='')  # 10-20
-            images = self.train_dataset.get_image_class(i)
-            self._construct_exemplar_set(images, m)
+            images, img_path = self.train_dataset.get_image_class(i)
+            self._construct_exemplar_set(images, img_path, m)
         self.numclass += self.task_size
         self.compute_exemplar_class_mean()
         self.model.train()
@@ -709,7 +624,8 @@ class iCaRLmodel:
         self.old_model.to(device)
         self.old_model.eval()
 
-    def _construct_exemplar_set(self, images, m):
+    def _construct_exemplar_set(self, images, img_path, m):
+
         class_mean, feature_extractor_output = self.compute_class_mean(images, self.transform)
         exemplar = []
         now_class_mean = np.zeros((1, 512))
@@ -721,7 +637,7 @@ class iCaRLmodel:
             x = np.linalg.norm(x, axis=1)  # x = (500,)
             index = np.argmin(x)
             now_class_mean += feature_extractor_output[index]
-            exemplar.append(images[index])
+            exemplar.append(img_path[index])
 
         print("the size of exemplar :%s" % (str(len(exemplar))))
         #  exemplar = List[(32,32,3)*200]
@@ -735,6 +651,7 @@ class iCaRLmodel:
 
     def Image_transform(self, images, transform):
         data = transform(Image.fromarray(images[0])).unsqueeze(0)
+        # Image.open(self.img_paths[index])
         for index in range(1, len(images)):
             data = torch.cat((data, self.transform(Image.fromarray(images[index])).unsqueeze(0)), dim=0)
         return data
@@ -754,7 +671,14 @@ class iCaRLmodel:
         self.class_mean_set = []
         for index in range(len(self.exemplar_set)):
             print("compute the class mean of %s" % (str(index)))
-            exemplar = self.exemplar_set[index]
+            img_path = self.exemplar_set[index]
+
+            exemplar = []
+            for i in range(len(img_path)):
+                add = np.array(Image.open(img_path[i]))
+                exemplar.append(add)
+            exemplar = np.array(exemplar, dtype=object)
+
             # exemplar=self.train_dataset.get_image_class(index)
             class_mean, _ = self.compute_class_mean(exemplar, self.transform)
             class_mean_, _ = self.compute_class_mean(exemplar, self.classify_transform)

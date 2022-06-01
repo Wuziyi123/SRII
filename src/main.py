@@ -1,12 +1,12 @@
 import math
 import os
 
-from iCaRL import iCaRLmodel
-from iCaRL_image import miniImagemodel
+from cifar100.iCaRL import iCaRLmodel
+from miniImageNet.iCaRL_image import miniImagemodel
 from ResNet import resnet18_cbam, resnet34_cbam, resnet50_cbam
 from ResNet_down import branch_resnet18_cbam, branch_resnet34_cbam, branch_resnet50_cbam
 import torch
-from my_utils import *
+# from utils.my_utils import *
 import numpy as np
 import random
 
@@ -92,7 +92,7 @@ if __name__ == "__main__":
     # learning rate
     parser.add_argument('--learning_rate', default=2.0, type=float, help='learning rate')
     # training epochs
-    parser.add_argument('--epochs', default=100, type=int, help='epochs')
+    parser.add_argument('--epochs', default=1, type=int, help='epochs')
     # Root directory of training dataset
     parser.add_argument('--input_data', default='dataset', type=str, help='path of dataset',
                         choices=['dataset', 'mini-imagenet/images'], metavar='PATH_TO_DATA')
