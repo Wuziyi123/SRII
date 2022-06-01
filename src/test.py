@@ -15,10 +15,12 @@ def get_train_and_test_dataloader(model, classes):
 
     train_loader = DataLoader(dataset=model.train_dataset,
                               shuffle=True,
+                              num_workers=8,
                               batch_size=128)
 
     test_loader = DataLoader(dataset=model.test_dataset,
                              shuffle=True,
+                             num_workers=8,
                              batch_size=128)
 
     return train_loader, test_loader
@@ -38,7 +40,7 @@ def test(parser_data):
     batch_size = parser_data.batch_size
     learning_rate = parser_data.learning_rate
     test_num = parser_data.test_classes
-    test_path = parser_data.test_file_path
+    test_path = parser_data.model_file
     data_path = 'dataset'
 
     load = iCaRLmodel(data_path, numclass, feature_extractor, batch_size, task_size, memory_size, epochs, learning_rate)
@@ -81,7 +83,7 @@ if __name__ == "__main__":
     # num of classes for test
     parser.add_argument('--test_classes', default=20, type=int, help='num of classes for test')
     # Root directory of training dataset
-    parser.add_argument('--test_file_path', default='model/test-20classes.pth.tar', type=str, help='path of test file', metavar='PATH_TO_TEST_FILE')
+    parser.add_argument('--model_file', default='model/test-20classes.pth.tar', type=str, help='path of test file', metavar='PATH_TO_TEST_FILE')
     # batch size
     parser.add_argument('--batch_size', default=128, type=int, metavar='N',
                         help='batch size when training.')
