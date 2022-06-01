@@ -617,7 +617,7 @@ class miniImagemodel:
         else:
             KNN_accuracy = self._test(self.test_loader, 1)
         print("NMS accuracy：" + str(KNN_accuracy.item()))
-        root_path = os.path.join(os.path.dirname(__file__), '../model/')
+        root_path = os.path.join(os.path.dirname(__file__), '../../model/')
         filename = root_path + 'accuracy:%.3f_KNN_accuracy:%.3f_increment:%d_net.pkl' % (accuracy, KNN_accuracy, i + 10)
         torch.save(self.model, filename)
         self.old_model = torch.load(filename)

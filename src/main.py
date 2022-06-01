@@ -92,7 +92,7 @@ if __name__ == "__main__":
     # learning rate
     parser.add_argument('--learning_rate', default=2.0, type=float, help='learning rate')
     # training epochs
-    parser.add_argument('--epochs', default=1, type=int, help='epochs')
+    parser.add_argument('--epochs', default=100, type=int, help='epochs')
     # Root directory of training dataset
     parser.add_argument('--input_data', default='dataset', type=str, help='path of dataset',
                         choices=['dataset', 'mini-imagenet/images'], metavar='PATH_TO_DATA')
