@@ -15,22 +15,23 @@ def main(parser_data):
     os.chdir(r'../')
     isCifar = True
 
-    if parser_data.input_data == 'dataset':
+    if parser_data.benchmark == 'cifar100':
         isCifar = True
-    elif parser_data.input_data == 'mini-imagenet/images':
+    elif parser_data.benchmark == 'miniImageNet':
         isCifar = False
     else:
         print("we don't have this dataset!")
         exit(-1)
 
-    numclass = 10
     feature_extractor = resnet18_cbam(isCifar=isCifar)
     branch_feature_extractor = branch_resnet18_cbam(isCifar=isCifar)
 
+    numclass = 10
     img_size = 32
     task_size = 10
     memory_size = 2000
-    epochs = 100
+
+    epochs = parser_data.epochs
     batch_size = parser_data.batch_size
     learning_rate = parser_data.learning_rate
     data_path = parser_data.input_data
@@ -90,9 +91,14 @@ if __name__ == "__main__":
     parser.add_argument('--device', default='cuda:0', help='device')
     # learning rate
     parser.add_argument('--learning_rate', default=2.0, type=float, help='learning rate')
+    # training epochs
+    parser.add_argument('--epochs', default=100, type=int, help='epochs')
     # Root directory of training dataset
     parser.add_argument('--input_data', default='dataset', type=str, help='path of dataset',
                         choices=['dataset', 'mini-imagenet/images'], metavar='PATH_TO_DATA')
+    # Root directory of training dataset
+    parser.add_argument('--benchmark', default='cifar100', type=str, help='benchmark dataset',
+                        choices=['cifar100', 'miniImageNet'], metavar='BENCHMARK_DATASET')
     # Storage address
     parser.add_argument('--output-dir', default='./save_weights', help='path where to save')
     # pretrained weights  pretrained/cifar100-pretrained.pth.tar
