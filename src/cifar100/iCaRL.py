@@ -12,7 +12,7 @@ from PIL import Image
 import torch.optim as optim
 
 # import my_utils
-from src.myNetwork import network
+from src.backbone.myNetwork import network
 from torch.utils.data import DataLoader
 
 from src.cifar100.iCIFAR100 import *

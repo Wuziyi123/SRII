@@ -12,12 +12,12 @@ from PIL import Image
 import torch.optim as optim
 
 import utils.my_utils
-from src.myNetwork import network
+from src.backbone.myNetwork import network
 from src.miniImageNet.iminiImageNet import iminiImageNet
 from torch.utils.data import DataLoader
 
 from src.miniImageNet.iminiImageNet import *
-from src.ResNet import ResNet
+from src.backbone.ResNet import ResNet
 
 import sys
 

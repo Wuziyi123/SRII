@@ -3,8 +3,9 @@ import os
 
 from cifar100.iCaRL import iCaRLmodel
 from miniImageNet.iCaRL_image import miniImagemodel
-from ResNet import resnet18_cbam, resnet34_cbam, resnet50_cbam
-from ResNet_down import branch_resnet18_cbam, branch_resnet34_cbam, branch_resnet50_cbam
+from src.backbone.vgg import vgg
+from backbone.ResNet import resnet18_cbam, resnet50_cbam
+from backbone.ResNet_down import branch_resnet18_cbam, branch_resnet50_cbam
 import torch
 # from utils.my_utils import *
 import numpy as np
@@ -14,7 +15,10 @@ import random
 def main(parser_data):
     os.chdir(r'../')
     isCifar = True
+    feature_extractor = None
+    branch_feature_extractor = None
 
+    # Adjust the resnet architecture according to the dataset
     if parser_data.benchmark == 'cifar100':
         isCifar = True
     elif parser_data.benchmark == 'miniImageNet':
@@ -23,8 +27,17 @@ def main(parser_data):
         print("we don't have this dataset!")
         exit(-1)
 
-    feature_extractor = resnet18_cbam(isCifar=isCifar)
-    branch_feature_extractor = branch_resnet18_cbam(isCifar=isCifar)
+    network = parser_data.network
+
+    if network == 'resnet':
+        feature_extractor = resnet18_cbam(isCifar=isCifar)
+        branch_feature_extractor = branch_resnet18_cbam(isCifar=isCifar)
+    elif network == 'vgg':
+        feature_extractor = vgg()
+        branch_feature_extractor = vgg()
+    else:
+        print("we don't adapt this network to the backbone!")
+        exit(-1)
 
     numclass = 10
     img_size = 32
@@ -89,6 +102,9 @@ if __name__ == "__main__":
 
     # The type of training equipment
     parser.add_argument('--device', default='cuda:0', help='device')
+    # The type of backbone
+    parser.add_argument('--network', default='resnet', type=str, help='the type of backbone',
+                        choices=['resnet', 'vgg'], metavar='BACKBONE (RESNET OR VGG?)')
     # learning rate
     parser.add_argument('--learning_rate', default=2.0, type=float, help='learning rate')
     # training epochs
@@ -104,7 +120,7 @@ if __name__ == "__main__":
     # pretrained weights  pretrained/cifar100-pretrained.pth.tar
     parser.add_argument('--pre_trained', default='pretrained/cifar100-pretrained.pth.tar', type=str, help='pre-trained model', metavar='PRE-TRAINED MODEL')
     # batch size
-    parser.add_argument('--batch_size', default=64, type=int, metavar='N',
+    parser.add_argument('--batch_size', default=128, type=int, metavar='N',
                         help='batch size when training.')
 
     args = parser.parse_args()
