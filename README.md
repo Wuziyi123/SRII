@@ -103,7 +103,7 @@ All commands should be run under the project root directory.
 To train the model(s) in the paper, run this command:
 
 ```train
-sh ./main.sh --input_data dataset --pre_trained pretrained/cifar100-pretrained.pth.tar
+sh ./main.sh --input_data dataset --pre_trained pretrained/cifar100-pretrained.pth.tar --network resnet
 ```
 
 >📋  Describe how to train the models, with example commands on how to train the models in your paper, including the full training procedure and appropriate hyperparameters.
